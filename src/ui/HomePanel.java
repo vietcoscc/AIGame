@@ -23,6 +23,7 @@ public class HomePanel extends JPanel implements ActionListener {
     private final ImageIcon imageExit = new ImageIcon(getClass().getResource("/images/Exit.png"));
     private final ImageIcon imageExit2 = new ImageIcon(getClass().getResource("/images/Exit2.png"));
     private final Image imageBackground = new ImageIcon(getClass().getResource("/images/board.jpg")).getImage();
+
     private JButton btnPlay, btnOption, btnExit;
     private CardLayout cardLayout;
     private Container container;
@@ -38,6 +39,7 @@ public class HomePanel extends JPanel implements ActionListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D graphics2D = (Graphics2D) g;
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
         graphics2D.drawImage(imageBackground,0,0,getWidth(),getHeight(),null);
     }
 
@@ -116,7 +118,7 @@ public class HomePanel extends JPanel implements ActionListener {
 
                 break;
             case "Exit":
-
+                System.exit(0);
                 break;
 
         }

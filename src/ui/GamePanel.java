@@ -3,6 +3,7 @@ package ui;
 
 import sounds.SoundManager;
 import ui.model.Chessboard;
+import ui.model.Chessman;
 
 import javax.sound.sampled.Clip;
 import javax.swing.*;
@@ -26,35 +27,52 @@ public class GamePanel extends JPanel implements ActionListener {
     private JButton btnExit;
     private int panelWidth;
     private int panelHeight;
+    private Chessboard chessboard;
+    private Chessman[] opponent_chess, player_chess;
     private boolean isInitial = false;
-    private Chessboard chessboard = new Chessboard();
-
     public GamePanel(Container container, CardLayout cardLayout) {
         this.container = container;
         this.cardLayout = cardLayout;
         setLayout(null);
-
+        initComponent();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D graphics2D = (Graphics2D) g;
-
-        panelWidth = getWidth();
-        panelHeight = getHeight();
-        chessboard.draw(graphics2D);
-
-        if (!isInitial) {
+        if(!isInitial){
             initComponent();
             isInitial = true;
         }
+        System.out.println("paintComponent");
+        Graphics2D graphics2D = (Graphics2D) g;
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        panelWidth = getWidth();
+        panelHeight = getHeight();
+        drawChessboard(graphics2D);
+    }
 
+    private void drawChessboard(Graphics2D graphics2D) {
+        chessboard.draw(graphics2D);
+        for (int i = 0; i < 3; i++) {
+            opponent_chess[i].draw(graphics2D);
+            player_chess[i].draw(graphics2D);
+        }
     }
 
     private void initComponent() {
-        setBackground(Color.GRAY);
 
+        chessboard = new Chessboard();
+        opponent_chess = new Chessman[3];
+        opponent_chess[0] = new Chessman(0, 0, false);
+        opponent_chess[1] = new Chessman(4, 0, false);
+        opponent_chess[2] = new Chessman(7, 0, false);
+        player_chess = new Chessman[3];
+        player_chess[0] = new Chessman(0, 7, true);
+        player_chess[1] = new Chessman(3, 7, true);
+        player_chess[2] = new Chessman(7, 7, true);
+
+        setBackground(Color.GRAY);
         btnExit = new JButton(imageExit);
         btnExit.setSize(W_BUTTON, H_BUTTON);
         btnExit.setLocation(getHeight() + (getWidth() - btnExit.getWidth() - getHeight()) / 2, getHeight() - btnExit.getHeight());
@@ -75,7 +93,6 @@ public class GamePanel extends JPanel implements ActionListener {
         });
         add(btnExit);
     }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {

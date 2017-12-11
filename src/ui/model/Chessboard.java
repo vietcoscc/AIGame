@@ -23,4 +23,13 @@ public class Chessboard {
             }
         }
     }
+
+
+    public Chessbox[][] getChessboxes() {
+        return chessboxes;
+    }
+
+    public void setChessboxes(Chessbox[][] chessboxes) {
+        this.chessboxes = chessboxes;
+    }
 }
