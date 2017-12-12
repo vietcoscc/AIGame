@@ -11,16 +11,15 @@ public class PanelManager extends JPanel {
     private CardLayout cardLayout = new CardLayout();
 
     public PanelManager() {
+        initComponent();
+    }
+
+    private void initComponent() {
         homePanel = new HomePanel(this,cardLayout);
         gamePanel = new GamePanel(this,cardLayout);
         setLayout(cardLayout);
         add(homePanel, HOME_PANEL);
         add(gamePanel, GAME_PANEL);
         cardLayout.show(this, HOME_PANEL);
-        initComponent();
-    }
-
-    private void initComponent() {
-
     }
 }

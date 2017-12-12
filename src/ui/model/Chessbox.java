@@ -12,6 +12,11 @@ public class Chessbox {
     private int pos_i, pos_j; // position i j
     private int x, y; //
 
+    private boolean hasMouseEntered = false;
+    private boolean isSelected = false;
+    private boolean isMovable = false;
+    private boolean hasChessman = false;
+
     public Chessbox(int pos_i, int pos_j) {
         this.pos_i = pos_i;
         this.pos_j = pos_j;
@@ -31,16 +36,31 @@ public class Chessbox {
         graphics2D.setPaint(Color.BLACK);
         graphics2D.drawRect(x, y, BOX_WIDTH, BOX_HEIGHT);
         //
+
+        //
         graphics2D.setPaint(Color.CYAN);
         graphics2D.drawString("(" + pos_i + "," + pos_j + ")", x, y + 50);
         if (isHelicopter()) {
-            graphics2D.drawImage(imageHelicopter, x+1, y+1,BOX_WIDTH-2,BOX_HEIGHT-2,null);
+            graphics2D.drawImage(imageHelicopter, x + 1, y + 1, BOX_WIDTH - 2, BOX_HEIGHT - 2, null);
         }
         if (isGoal()) {
-            graphics2D.drawImage(imageGoal, x+1, y+1,BOX_WIDTH-2,BOX_HEIGHT-2,null);
+            graphics2D.drawImage(imageGoal, x + 1, y + 1, BOX_WIDTH - 2, BOX_HEIGHT - 2, null);
         }
         //
+        if (hasMouseEntered) {
+            graphics2D.setPaint(Color.green);
+            graphics2D.fillRect(x + 1, y + 1, BOX_WIDTH - 1, BOX_HEIGHT - 1);
+        }
+        if (isSelected) {
+            graphics2D.setPaint(Color.red);
+            graphics2D.fillRect(x + 1, y + 1, BOX_WIDTH - 1, BOX_HEIGHT - 1);
+        }
+        if (isMovable) {
+            graphics2D.setPaint(Color.CYAN);
+            graphics2D.fillRect(x + 1, y + 1, BOX_WIDTH - 1, BOX_HEIGHT - 1);
+        }
     }
+
 
     public boolean isGoal() {
         if ((pos_i == 4 && pos_j == 0) || (pos_i == 3 && pos_j == Chessboard.LENGTH - 1)) {
@@ -56,35 +76,36 @@ public class Chessbox {
         return false;
     }
 
-    public int getPos_i() {
-        return pos_i;
+
+    public void setHasMouseEntered(boolean hasMouseEntered) {
+        this.hasMouseEntered = hasMouseEntered;
     }
 
-    public void setPos_i(int pos_i) {
-        this.pos_i = pos_i;
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
-    public int getPos_j() {
-        return pos_j;
+    public boolean isHasMouseEntered() {
+        return hasMouseEntered;
     }
 
-    public void setPos_j(int pos_j) {
-        this.pos_j = pos_j;
+    public boolean isSelected() {
+        return isSelected;
     }
 
-    public int getX() {
-        return x;
+    public boolean isMovable() {
+        return isMovable;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public void setMovable(boolean movable) {
+        isMovable = movable;
     }
 
-    public int getY() {
-        return y;
+    public boolean isHasChessman() {
+        return hasChessman;
     }
 
-    public void setY(int y) {
-        this.y = y;
+    public void setHasChessman(boolean hasChessman) {
+        this.hasChessman = hasChessman;
     }
 }
