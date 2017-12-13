@@ -26,12 +26,12 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
     private int panelHeight;
     //
     private Chessboard chessboard; // Bàn cờ
-    private Chessman[] opponent_chess, player_chess; //  Quân cờ của 2 bên
+    private Chessman[] opponentChess, playerChess; //  Quân cờ của 2 bên
     //
     public static boolean isPlayingWithComputer = false; // Yes là chơi với máy , No là chơi 2 người với nhau
     private boolean isInitial = false; // Biến check khởi tạo ban đầu
-    private int currentMouse_i = -1, currentMouse_j = -1; // tọa độ của con trỏ chuột trên bàn cờ (Màu xanh)
-    private int currentSelected_i = -1, currentSelected_j = -1; // tọa độ của ô cờ được chọn (Màu đỏ)
+    private int currentMouseI = -1, currentMouseJ = -1; // tọa độ của con trỏ chuột trên bàn cờ (Màu xanh)
+    private int currentSelectedI = -1, currentSelectedJ = -1; // tọa độ của ô cờ được chọn (Màu đỏ)
 
     //
     public GamePanel(Container container, CardLayout cardLayout) {
@@ -64,30 +64,30 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
     private void drawChessboard(Graphics2D graphics2D) {
         chessboard.draw(graphics2D);
         for (int i = 0; i < 3; i++) {
-            opponent_chess[i].draw(graphics2D);
-            player_chess[i].draw(graphics2D);
+            opponentChess[i].draw(graphics2D);
+            playerChess[i].draw(graphics2D);
         }
     }
 
     private void initComponent() {
-
+        // Khởi tạo bàn cờ
         chessboard = new Chessboard();
-        opponent_chess = new Chessman[3];
-        opponent_chess[0] = new Chessman(0, 0, false);
+        opponentChess = new Chessman[3];
+        opponentChess[0] = new Chessman(0, 0, false);
         chessboard.getChessboxes()[0][0].setHasChessman(true);
-        opponent_chess[1] = new Chessman(4, 0, false);
+        opponentChess[1] = new Chessman(4, 0, false);
         chessboard.getChessboxes()[4][0].setHasChessman(true);
-        opponent_chess[2] = new Chessman(7, 0, false);
+        opponentChess[2] = new Chessman(7, 0, false);
         chessboard.getChessboxes()[7][0].setHasChessman(true);
-        player_chess = new Chessman[3];
-        player_chess[0] = new Chessman(0, 7, true);
+        playerChess = new Chessman[3];
+        playerChess[0] = new Chessman(0, 7, true);
         chessboard.getChessboxes()[0][7].setHasChessman(true);
-        player_chess[1] = new Chessman(3, 7, true);
+        playerChess[1] = new Chessman(3, 7, true);
         chessboard.getChessboxes()[3][7].setHasChessman(true);
-        player_chess[2] = new Chessman(7, 7, true);
+        playerChess[2] = new Chessman(7, 7, true);
         chessboard.getChessboxes()[7][7].setHasChessman(true);
 
-//        setBackground(Color.GRAY);
+        //setBackground(Color.GRAY);
         btnExit = new JButton(imageExit);
         btnExit.setSize(W_BUTTON, H_BUTTON);
         btnExit.setLocation(getHeight() + (getWidth() - btnExit.getWidth() - getHeight()) / 2, getHeight() - btnExit.getHeight());
@@ -137,21 +137,21 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
         int pos_i = e.getX() / Chessbox.BOX_WIDTH;
         int pos_j = e.getY() / Chessbox.BOX_HEIGHT;
         System.out.println(pos_i + ":" + pos_j);
-        chessboard.resetMouseEnterdState(currentMouse_i, currentMouse_j);
-        currentMouse_i = -1;
-        currentMouse_j = -1;
+        chessboard.resetMouseEnterdState(currentMouseI, currentMouseJ);
+        currentMouseI = -1;
+        currentMouseJ = -1;
         if (pos_i >= 0 && pos_i < 8 && pos_j >= 0 && pos_j < 8) {
-            currentMouse_i = pos_i;
-            currentMouse_j = pos_j;
+            currentMouseI = pos_i;
+            currentMouseJ = pos_j;
         }
-        chessboard.setMouseEntered(currentMouse_i, currentMouse_j);
+        chessboard.setMouseEntered(currentMouseI, currentMouseJ);
         repaint();
     }
 
     public void moveChessman(int fromI, int fromJ, int toI, int toJ) {
         for (int i = 0; i < 3; i++) {
-            if (player_chess[i].getPos_i() == fromI && player_chess[i].getPos_j() == fromJ) {
-                player_chess[i].setPositionIJ(toI, toJ);
+            if (playerChess[i].getPos_i() == fromI && playerChess[i].getPos_j() == fromJ) {
+                playerChess[i].setPositionIJ(toI, toJ);
                 chessboard.getChessboxes()[fromI][fromJ].setHasChessman(false);
                 chessboard.getChessboxes()[toI][toJ].setHasChessman(true);
                 chessboard.resetChessboxSelected(fromI, fromJ);
@@ -159,8 +159,8 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
                 repaint();
                 return;
             }
-            if (opponent_chess[i].getPos_i() == fromI && opponent_chess[i].getPos_j() == fromJ) {
-                opponent_chess[i].setPositionIJ(toI, toJ);
+            if (opponentChess[i].getPos_i() == fromI && opponentChess[i].getPos_j() == fromJ) {
+                opponentChess[i].setPositionIJ(toI, toJ);
                 chessboard.getChessboxes()[fromI][fromJ].setHasChessman(false);
                 chessboard.getChessboxes()[toI][toJ].setHasChessman(true);
                 chessboard.resetChessboxSelected(fromI, fromJ);
@@ -174,11 +174,11 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
     private Chessman getChessman(int pos_i, int pos_j) {
         if (chessboard.getChessboxes()[pos_i][pos_j].hasChessman()) {
             for (int i = 0; i < 3; i++) {
-                if (player_chess[i].getPos_i() == pos_i && player_chess[i].getPos_j() == pos_j) {
-                    return player_chess[i];
+                if (playerChess[i].getPos_i() == pos_i && playerChess[i].getPos_j() == pos_j) {
+                    return playerChess[i];
                 }
-                if (opponent_chess[i].getPos_i() == pos_i && opponent_chess[i].getPos_j() == pos_j) {
-                    return opponent_chess[i];
+                if (opponentChess[i].getPos_i() == pos_i && opponentChess[i].getPos_j() == pos_j) {
+                    return opponentChess[i];
                 }
             }
         }
@@ -197,35 +197,34 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
             }
         }
         if (chessboard.getChessboxes()[pos_i][pos_j].isMovable()) {
-            moveChessman(currentSelected_i, currentSelected_j, pos_i, pos_j);
+            moveChessman(currentSelectedI, currentSelectedJ, pos_i, pos_j);
             return;
         }
-        if (pos_i == currentSelected_i && pos_j == currentSelected_j) {
-            if (chessboard.getChessboxes()[currentSelected_i][currentSelected_j].isSelected()) {
-                chessboard.resetChessboxSelected(currentSelected_i, currentSelected_j);
-                chessboard.setMovableBox(currentSelected_i, currentSelected_j, false);
-                currentSelected_i = -1;
-                currentSelected_j = -1;
+        if (pos_i == currentSelectedI && pos_j == currentSelectedJ) {
+            if (chessboard.getChessboxes()[currentSelectedI][currentSelectedJ].isSelected()) {
+                chessboard.resetChessboxSelected(currentSelectedI, currentSelectedJ);
+                chessboard.setMovableBox(currentSelectedI, currentSelectedJ, false);
+                currentSelectedI = -1;
+                currentSelectedJ = -1;
 
             } else {
-                chessboard.setChessboxSelected(currentSelected_i, currentSelected_j);
-                if (chessboard.getChessboxes()[currentSelected_i][currentSelected_j].hasChessman()) {
-                    chessboard.setMovableBox(currentSelected_i, currentSelected_j, true);
+                chessboard.setChessboxSelected(currentSelectedI, currentSelectedJ);
+                if (chessboard.getChessboxes()[currentSelectedI][currentSelectedJ].hasChessman()) {
+                    chessboard.setMovableBox(currentSelectedI, currentSelectedJ, true);
                 }
             }
-
         } else {
-            chessboard.resetChessboxSelected(currentSelected_i, currentSelected_j);
-            chessboard.setMovableBox(currentSelected_i, currentSelected_j, false);
-            currentSelected_i = -1;
-            currentSelected_j = -1;
+            chessboard.resetChessboxSelected(currentSelectedI, currentSelectedJ);
+            chessboard.setMovableBox(currentSelectedI, currentSelectedJ, false);
+            currentSelectedI = -1;
+            currentSelectedJ = -1;
 
             if (pos_i >= 0 && pos_i < 8 && pos_j >= 0 && pos_j < 8) {
-                currentSelected_i = pos_i;
-                currentSelected_j = pos_j;
-                chessboard.setChessboxSelected(currentSelected_i, currentSelected_j);
-                if (chessboard.getChessboxes()[currentSelected_i][currentSelected_j].hasChessman()) {
-                    chessboard.setMovableBox(currentSelected_i, currentSelected_j, true);
+                currentSelectedI = pos_i;
+                currentSelectedJ = pos_j;
+                chessboard.setChessboxSelected(currentSelectedI, currentSelectedJ);
+                if (chessboard.getChessboxes()[currentSelectedI][currentSelectedJ].hasChessman()) {
+                    chessboard.setMovableBox(currentSelectedI, currentSelectedJ, true);
                 }
             }
         }

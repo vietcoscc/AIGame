@@ -44,10 +44,6 @@ public class Chessboard {
         return chessboxes;
     }
 
-    public void setChessboxes(Chessbox[][] chessboxes) {
-        this.chessboxes = chessboxes;
-    }
-
     public void setMouseEntered(int i, int j) {
         if (i >= 0 && j >= 0 && i < 8 && j < 8) {
             chessboxes[i][j].setHasMouseEntered(true);

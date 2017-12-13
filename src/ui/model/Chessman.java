@@ -7,7 +7,7 @@ public class Chessman {
     public final Image CHESSMAN_A = new ImageIcon(getClass().getResource("/images/chessman_a.png")).getImage();
     public final Image CHESSMAN_B = new ImageIcon(getClass().getResource("/images/chessman_b.png")).getImage();
 
-    private int pos_i, pos_j;
+    private int pos_i, pos_j; // Tọa độ (vị trí) trên bàn cờ (0-7)
     private boolean isYours; // check quân cờ là bên mình hay bên đối phương
 
     private int x, y;
@@ -40,16 +40,8 @@ public class Chessman {
         return pos_i;
     }
 
-    public void setPos_i(int pos_i) {
-        this.pos_i = pos_i;
-    }
-
     public int getPos_j() {
         return pos_j;
-    }
-
-    public void setPos_j(int pos_j) {
-        this.pos_j = pos_j;
     }
 
     public boolean isYours() {
