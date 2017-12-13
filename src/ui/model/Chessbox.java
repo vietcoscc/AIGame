@@ -12,10 +12,10 @@ public class Chessbox {
     private int pos_i, pos_j; // position i j
     private int x, y; //
 
-    private boolean hasMouseEntered = false;
-    private boolean isSelected = false;
-    private boolean isMovable = false;
-    private boolean hasChessman = false;
+    private boolean hasMouseEntered = false; // check con trỏ chuột có trỏ vào ô hay không
+    private boolean isSelected = false; // check ô có được chọn hay không
+    private boolean isMovable = false; // check xem có phải một ô gợi ý vị trí có thể đi
+    private boolean hasChessman = false; // check xem ô có quân cờ đang nằm ở trên
 
     public Chessbox(int pos_i, int pos_j) {
         this.pos_i = pos_i;
@@ -59,6 +59,7 @@ public class Chessbox {
             graphics2D.setPaint(Color.CYAN);
             graphics2D.fillRect(x + 1, y + 1, BOX_WIDTH - 1, BOX_HEIGHT - 1);
         }
+
     }
 
 
@@ -101,7 +102,7 @@ public class Chessbox {
         isMovable = movable;
     }
 
-    public boolean isHasChessman() {
+    public boolean hasChessman() {
         return hasChessman;
     }
 

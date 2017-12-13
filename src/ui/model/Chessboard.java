@@ -1,11 +1,10 @@
 package ui.model;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public class Chessboard {
     public static final int LENGTH = 8;
-    private Chessbox[][] chessboxes = new Chessbox[LENGTH][LENGTH];
+    private Chessbox[][] chessboxes = new Chessbox[LENGTH][LENGTH]; // mảng các ô cờ
 
 
     public Chessboard() {
@@ -72,50 +71,34 @@ public class Chessboard {
         }
         for (int i = 0; i < LENGTH; i++) {
             for (int j = 0; j < LENGTH; j++) {
-
-
                 if ((i == pos_i + 1) && (j == pos_j - 2) || (i == pos_i - 1) && (j == pos_j - 2)) {
-                    if (!chessboxes[i][j].isHasChessman()) {
-                        if (pos_j - 1 >= 0&&(!chessboxes[pos_i][pos_j-1].isHasChessman())) {
+                    if (!chessboxes[i][j].hasChessman()) {
+                        if (pos_j - 1 >= 0&&(!chessboxes[pos_i][pos_j-1].hasChessman())) {
                             chessboxes[i][j].setMovable(isMovable);
                         }
                     }
                 }
                 if ((i == pos_i + 1) && (j == pos_j + 2) || (i == pos_i - 1) && (j == pos_j + 2)) {
-                    if (!chessboxes[i][j].isHasChessman()) {
-                        if (pos_j + 1 < 8&&(!chessboxes[pos_i][pos_j+1].isHasChessman())) {
+                    if (!chessboxes[i][j].hasChessman()) {
+                        if (pos_j + 1 < 8&&(!chessboxes[pos_i][pos_j+1].hasChessman())) {
                             chessboxes[i][j].setMovable(isMovable);
                         }
                     }
                 }
                 if ((i == pos_i + 2) && (j == pos_j + 1) || (i == pos_i + 2) && (j == pos_j - 1)) {
-                    if (!chessboxes[i][j].isHasChessman()) {
-                        if (pos_i + 1 <8&&(!chessboxes[pos_i+1][pos_j].isHasChessman())) {
+                    if (!chessboxes[i][j].hasChessman()) {
+                        if (pos_i + 1 <8&&(!chessboxes[pos_i+1][pos_j].hasChessman())) {
                             chessboxes[i][j].setMovable(isMovable);
                         }
                     }
                 }
                 if ((i == pos_i - 2) && (j == pos_j + 1) || (i == pos_i - 2) && (j == pos_j - 1)) {
-                    if (!chessboxes[i][j].isHasChessman()) {
-                        if (pos_i - 1 >= 0&&(!chessboxes[pos_i-1][pos_j].isHasChessman())) {
+                    if (!chessboxes[i][j].hasChessman()) {
+                        if (pos_i - 1 >= 0&&(!chessboxes[pos_i-1][pos_j].hasChessman())) {
                             chessboxes[i][j].setMovable(isMovable);
                         }
                     }
                 }
-
-//                if ((i == pos_i + 1) && (j == pos_j - 2) ||
-//                        (i == pos_i + 2) && (j == pos_j - 1) ||
-//                        (i == pos_i - 1) && (j == pos_j - 2) ||
-//                        (i == pos_i - 2) && (j == pos_j - 1) ||
-//                        (i == pos_i + 1) && (j == pos_j + 2) ||
-//                        (i == pos_i + 2) && (j == pos_j + 1) ||
-//                        (i == pos_i - 1) && (j == pos_j + 2) ||
-//                        (i == pos_i - 2) && (j == pos_j + 1)) {
-//                    if (!chessboxes[i][j].isHasChessman()) {
-//                        chessboxes[i][j].setMovable(isMovable);
-//                    }
-//                    System.out.println(i + ":" + j);
-//                }
             }
         }
     }

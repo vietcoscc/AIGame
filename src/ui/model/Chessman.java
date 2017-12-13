@@ -8,7 +8,7 @@ public class Chessman {
     public final Image CHESSMAN_B = new ImageIcon(getClass().getResource("/images/chessman_b.png")).getImage();
 
     private int pos_i, pos_j;
-    private boolean isYours;
+    private boolean isYours; // check quân cờ là bên mình hay bên đối phương
 
     private int x, y;
 
@@ -50,5 +50,13 @@ public class Chessman {
 
     public void setPos_j(int pos_j) {
         this.pos_j = pos_j;
+    }
+
+    public boolean isYours() {
+        return isYours;
+    }
+
+    public void setYours(boolean yours) {
+        isYours = yours;
     }
 }

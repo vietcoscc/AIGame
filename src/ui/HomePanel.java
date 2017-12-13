@@ -39,8 +39,8 @@ public class HomePanel extends JPanel implements ActionListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D graphics2D = (Graphics2D) g;
-        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-        graphics2D.drawImage(imageBackground,0,0,getWidth(),getHeight(),null);
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics2D.drawImage(imageBackground, 0, 0, getWidth(), getHeight(), null);
     }
 
     private void initComponent() {
@@ -115,6 +115,17 @@ public class HomePanel extends JPanel implements ActionListener {
                 cardLayout.show(container, GAME_PANEL);
                 break;
             case "Option":
+                int result = JOptionPane.showConfirmDialog(this, "Nhấn 'Yes' để chơi với máy\n Nhấn 'No' để chơi 2 người", "", JOptionPane.YES_NO_OPTION);
+                if (result == JOptionPane.YES_OPTION) {
+                    GamePanel.isPlayingWithComputer = true;
+                    PanelManager panelManager = (PanelManager) container;
+                    panelManager.resetGame();
+
+                } else {
+                    GamePanel.isPlayingWithComputer = false;
+                    PanelManager panelManager = (PanelManager) container;
+                    panelManager.resetGame();
+                }
 
                 break;
             case "Exit":

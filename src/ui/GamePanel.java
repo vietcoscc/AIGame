@@ -27,6 +27,8 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
     //
     private Chessboard chessboard; // Bàn cờ
     private Chessman[] opponent_chess, player_chess; //  Quân cờ của 2 bên
+    //
+    public static boolean isPlayingWithComputer = false; // Yes là chơi với máy , No là chơi 2 người với nhau
     private boolean isInitial = false; // Biến check khởi tạo ban đầu
     private int currentMouse_i = -1, currentMouse_j = -1; // tọa độ của con trỏ chuột trên bàn cờ (Màu xanh)
     private int currentSelected_i = -1, currentSelected_j = -1; // tọa độ của ô cờ được chọn (Màu đỏ)
@@ -35,6 +37,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
     public GamePanel(Container container, CardLayout cardLayout) {
         this.container = container;
         this.cardLayout = cardLayout;
+        showDialogPlayingMode();
         setLayout(null);
         initComponent();
     }
@@ -48,10 +51,13 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
         panelHeight = getHeight();
         if (!isInitial) {
             initComponent();
-
             isInitial = true;
         }
         drawChessboard(graphics2D);
+
+    }
+
+    public void showDialogPlayingMode() {
 
     }
 
@@ -81,7 +87,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
         player_chess[2] = new Chessman(7, 7, true);
         chessboard.getChessboxes()[7][7].setHasChessman(true);
 
-        setBackground(Color.GRAY);
+//        setBackground(Color.GRAY);
         btnExit = new JButton(imageExit);
         btnExit.setSize(W_BUTTON, H_BUTTON);
         btnExit.setLocation(getHeight() + (getWidth() - btnExit.getWidth() - getHeight()) / 2, getHeight() - btnExit.getHeight());
@@ -107,14 +113,12 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
         addMouseListener(this);
     }
 
-    public void movePlayerChessTo(int pos_i, int pos_j) {
-
-    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "Exit":
+                initComponent();
                 cardLayout.show(container, HOME_PANEL);
                 break;
             default:
@@ -167,12 +171,31 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
         }
     }
 
+    private Chessman getChessman(int pos_i, int pos_j) {
+        if (chessboard.getChessboxes()[pos_i][pos_j].hasChessman()) {
+            for (int i = 0; i < 3; i++) {
+                if (player_chess[i].getPos_i() == pos_i && player_chess[i].getPos_j() == pos_j) {
+                    return player_chess[i];
+                }
+                if (opponent_chess[i].getPos_i() == pos_i && opponent_chess[i].getPos_j() == pos_j) {
+                    return opponent_chess[i];
+                }
+            }
+        }
+        return null;
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
 
         System.out.println("mouseClicked");
         int pos_i = e.getX() / Chessbox.BOX_WIDTH;
         int pos_j = e.getY() / Chessbox.BOX_HEIGHT;
+        if (isPlayingWithComputer) {
+            if (getChessman(pos_i, pos_j) != null && !getChessman(pos_i, pos_j).isYours()) {
+                return;
+            }
+        }
         if (chessboard.getChessboxes()[pos_i][pos_j].isMovable()) {
             moveChessman(currentSelected_i, currentSelected_j, pos_i, pos_j);
             return;
@@ -186,7 +209,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
 
             } else {
                 chessboard.setChessboxSelected(currentSelected_i, currentSelected_j);
-                if (chessboard.getChessboxes()[currentSelected_i][currentSelected_j].isHasChessman()) {
+                if (chessboard.getChessboxes()[currentSelected_i][currentSelected_j].hasChessman()) {
                     chessboard.setMovableBox(currentSelected_i, currentSelected_j, true);
                 }
             }
@@ -201,7 +224,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
                 currentSelected_i = pos_i;
                 currentSelected_j = pos_j;
                 chessboard.setChessboxSelected(currentSelected_i, currentSelected_j);
-                if (chessboard.getChessboxes()[currentSelected_i][currentSelected_j].isHasChessman()) {
+                if (chessboard.getChessboxes()[currentSelected_i][currentSelected_j].hasChessman()) {
                     chessboard.setMovableBox(currentSelected_i, currentSelected_j, true);
                 }
             }
