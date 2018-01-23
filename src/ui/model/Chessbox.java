@@ -109,4 +109,8 @@ public class Chessbox {
     public void setHasChessman(boolean hasChessman) {
         this.hasChessman = hasChessman;
     }
+
+    public boolean isEmptyBox() {
+        return !hasChessman();
+    }
 }

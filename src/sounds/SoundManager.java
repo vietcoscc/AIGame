@@ -13,7 +13,7 @@ public class SoundManager {
     public static Clip getSound(URL url) {
         try {
             AudioInputStream inputStream = AudioSystem.getAudioInputStream(url);
-            Clip clip = AudioSystem.getClip();
+            Clip clip = AudioSystem.getClip(null);
             clip.open(inputStream);
             return clip;
         } catch (Exception e) {

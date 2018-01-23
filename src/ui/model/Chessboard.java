@@ -1,5 +1,7 @@
 package ui.model;
 
+import ui.StateBoard;
+
 import java.awt.*;
 
 public class Chessboard {
@@ -15,8 +17,11 @@ public class Chessboard {
         for (int i = 0; i < LENGTH; i++) {
             for (int j = 0; j < LENGTH; j++) {
                 chessboxes[i][j] = new Chessbox(i, j);
+
             }
         }
+
+
     }
 
     public void draw(Graphics2D graphics2D) {
@@ -65,32 +70,34 @@ public class Chessboard {
             }
             return;
         }
+
+
         for (int i = 0; i < LENGTH; i++) {
             for (int j = 0; j < LENGTH; j++) {
                 if ((i == pos_i + 1) && (j == pos_j - 2) || (i == pos_i - 1) && (j == pos_j - 2)) {
                     if (!chessboxes[i][j].hasChessman()) {
-                        if (pos_j - 1 >= 0&&(!chessboxes[pos_i][pos_j-1].hasChessman())) {
+                        if (pos_j - 1 >= 0 && (!chessboxes[pos_i][pos_j - 1].hasChessman())) {
                             chessboxes[i][j].setMovable(isMovable);
                         }
                     }
                 }
                 if ((i == pos_i + 1) && (j == pos_j + 2) || (i == pos_i - 1) && (j == pos_j + 2)) {
                     if (!chessboxes[i][j].hasChessman()) {
-                        if (pos_j + 1 < 8&&(!chessboxes[pos_i][pos_j+1].hasChessman())) {
+                        if (pos_j + 1 < 8 && (!chessboxes[pos_i][pos_j + 1].hasChessman())) {
                             chessboxes[i][j].setMovable(isMovable);
                         }
                     }
                 }
                 if ((i == pos_i + 2) && (j == pos_j + 1) || (i == pos_i + 2) && (j == pos_j - 1)) {
                     if (!chessboxes[i][j].hasChessman()) {
-                        if (pos_i + 1 <8&&(!chessboxes[pos_i+1][pos_j].hasChessman())) {
+                        if (pos_i + 1 < 8 && (!chessboxes[pos_i + 1][pos_j].hasChessman())) {
                             chessboxes[i][j].setMovable(isMovable);
                         }
                     }
                 }
                 if ((i == pos_i - 2) && (j == pos_j + 1) || (i == pos_i - 2) && (j == pos_j - 1)) {
                     if (!chessboxes[i][j].hasChessman()) {
-                        if (pos_i - 1 >= 0&&(!chessboxes[pos_i-1][pos_j].hasChessman())) {
+                        if (pos_i - 1 >= 0 && (!chessboxes[pos_i - 1][pos_j].hasChessman())) {
                             chessboxes[i][j].setMovable(isMovable);
                         }
                     }

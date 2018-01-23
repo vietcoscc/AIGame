@@ -22,8 +22,10 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
     private CardLayout cardLayout; // chuyển đổi qua lại giữa các panel
     private Container container; // chuyển đổi qua lại giữa các panel
     private JButton btnExit;
+    private TextField textInfo;
     private int panelWidth;
     private int panelHeight;
+
     //
     private Chessboard chessboard; // Bàn cờ
     private Chessman[] opponentChess, playerChess; //  Quân cờ của 2 bên
@@ -33,6 +35,10 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
     private int currentMouseI = -1, currentMouseJ = -1; // tọa độ của con trỏ chuột trên bàn cờ (Màu xanh)
     private int currentSelectedI = -1, currentSelectedJ = -1; // tọa độ của ô cờ được chọn (Màu đỏ)
 
+    private boolean isPlayerTurn = true;
+    private byte numMoves = 0;
+
+    private  StateBoard stateBoard = StateBoard.getDefaultState();
     //
     public GamePanel(Container container, CardLayout cardLayout) {
         this.container = container;
@@ -54,7 +60,6 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
             isInitial = true;
         }
         drawChessboard(graphics2D);
-
     }
 
     public void showDialogPlayingMode() {
@@ -107,6 +112,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
         });
         add(btnExit);
 
+
         removeMouseListener(this);
         removeMouseMotionListener(this);
         addMouseMotionListener(this);
@@ -149,6 +155,10 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
     }
 
     public void moveChessman(int fromI, int fromJ, int toI, int toJ) {
+        Move move = new Move(fromI + fromJ * 8, toI + toJ*8);
+        stateBoard.moveChess(move);
+        stateBoard.printDebug();
+
         for (int i = 0; i < 3; i++) {
             if (playerChess[i].getPos_i() == fromI && playerChess[i].getPos_j() == fromJ) {
                 playerChess[i].setPositionIJ(toI, toJ);
@@ -156,6 +166,30 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
                 chessboard.getChessboxes()[toI][toJ].setHasChessman(true);
                 chessboard.resetChessboxSelected(fromI, fromJ);
                 chessboard.setMovableBox(fromI, fromJ, false);
+                boolean moveToHelicopter = (stateBoard.getCellTypeAt(toI, toJ) == StateBoard.HELICOPTER_GREEN_CELL
+                        && stateBoard.getChessAt(toI, toJ) == StateBoard.RED_CHESS) ||
+                        (stateBoard.getCellTypeAt(toI, toJ) == StateBoard.HELICOPTER_RED_CELL
+                                && stateBoard.getChessAt(toI, toJ) == StateBoard.GREEN_CHESS);
+
+                if (!moveToHelicopter){
+                    chessboard.setMovableBox(fromI, fromJ, false);
+                    playerChess[i].setCanMoveThisTurn(false);
+                }else {
+                    currentSelectedI = toI;
+                    currentSelectedJ = toJ;
+                    chessboard.setChessboxSelected(currentSelectedI,currentSelectedJ);
+                    for(int pos = 0; pos < 64; pos++){
+                        int row = pos % 8;
+                        int col = pos / 8;
+                        int cellType = stateBoard.getCellTypeAt(row,col);
+
+                        if(chessboard.getChessboxes()[row][col].isEmptyBox() && cellType != StateBoard.GOAL_RED_CELL ){
+                            chessboard.getChessboxes()[row][col].setMovable(true);
+                        }
+                    }
+
+                }
+                endMove(moveToHelicopter);
                 repaint();
                 return;
             }
@@ -165,13 +199,55 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
                 chessboard.getChessboxes()[toI][toJ].setHasChessman(true);
                 chessboard.resetChessboxSelected(fromI, fromJ);
                 chessboard.setMovableBox(fromI, fromJ, false);
+                boolean moveToHelicopter = (stateBoard.getCellTypeAt(toI, toJ) == StateBoard.HELICOPTER_GREEN_CELL
+                        && stateBoard.getChessAt(toI, toJ) == StateBoard.RED_CHESS) ||
+                        (stateBoard.getCellTypeAt(toI, toJ) == StateBoard.HELICOPTER_RED_CELL
+                                && stateBoard.getChessAt(toI, toJ) == StateBoard.GREEN_CHESS);
+
+                if (!moveToHelicopter){
+                    chessboard.setMovableBox(fromI, fromJ, false);
+                    opponentChess[i].setCanMoveThisTurn(false);
+                }else {
+                    currentSelectedI = toI;
+                    currentSelectedJ = toJ;
+                    chessboard.setChessboxSelected(currentSelectedI,currentSelectedJ);
+                    for(int pos = 0; pos < 64; pos++){
+                        int row = pos % 8;
+                        int col = pos / 8;
+                        int cellType = stateBoard.getCellTypeAt(row,col);
+
+                        if(chessboard.getChessboxes()[row][col].isEmptyBox() && cellType != StateBoard.GOAL_GREEN_CELL ){
+                            chessboard.getChessboxes()[row][col].setMovable(true);
+                        }
+                    }
+
+                }
+                endMove(moveToHelicopter);
                 repaint();
                 return;
             }
         }
     }
 
+    private void endMove(boolean moveToHelicopter) {
+        if (moveToHelicopter){
+            return;
+        }
+        numMoves++;
+        if (numMoves >= 2) {
+            numMoves = 0;
+            isPlayerTurn = !isPlayerTurn;
+            for (int i = 0; i < 3; i++) {
+                playerChess[i].setCanMoveThisTurn(true);
+                opponentChess[i].setCanMoveThisTurn(true);
+            }
+        }
+    }
+
     private Chessman getChessman(int pos_i, int pos_j) {
+        if (pos_i == -1 || pos_j == -1) {
+            return null;
+        }
         if (chessboard.getChessboxes()[pos_i][pos_j].hasChessman()) {
             for (int i = 0; i < 3; i++) {
                 if (playerChess[i].getPos_i() == pos_i && playerChess[i].getPos_j() == pos_j) {
@@ -196,7 +272,15 @@ public class GamePanel extends JPanel implements ActionListener, MouseMotionList
                 return;
             }
         }
-        if (chessboard.getChessboxes()[pos_i][pos_j].isMovable()) {
+
+        if(getChessman(pos_i, pos_j) != null && getChessman(pos_i, pos_j).isYours() != isPlayerTurn){
+            return;
+        }
+
+        Chessman currentChessman = getChessman(currentSelectedI, currentSelectedJ);
+        if (currentChessman != null && currentChessman.canMoveThisTurn() &&
+                chessboard.getChessboxes()[pos_i][pos_j].isMovable()) {
+
             moveChessman(currentSelectedI, currentSelectedJ, pos_i, pos_j);
             return;
         }

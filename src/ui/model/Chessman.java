@@ -9,6 +9,7 @@ public class Chessman {
 
     private int pos_i, pos_j; // Tọa độ (vị trí) trên bàn cờ (0-7)
     private boolean isYours; // check quân cờ là bên mình hay bên đối phương
+    private boolean canMove = true;
 
     private int x, y;
 
@@ -50,5 +51,13 @@ public class Chessman {
 
     public void setYours(boolean yours) {
         isYours = yours;
+    }
+
+    public boolean canMoveThisTurn() {
+        return canMove;
+    }
+
+    public void setCanMoveThisTurn(boolean canMove) {
+        this.canMove = canMove;
     }
 }
